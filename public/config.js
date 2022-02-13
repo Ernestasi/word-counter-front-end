@@ -1,0 +1,3 @@
+window.ENV = {
+    "BACK_END_URL":"http://localhost:8080"
+}
