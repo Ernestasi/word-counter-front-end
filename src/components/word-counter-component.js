@@ -282,7 +282,7 @@ export default class UploadFiles extends Component {
                       aria-label="custom thumb label"
                       value={limit}
                       min={1}
-                      max={500}
+                      max={150}
                     />
                   );
                 }
