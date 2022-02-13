@@ -1,3 +1,3 @@
 window.ENV = {
-    "BACK_END_URL":"https://word-counter-front.herokuapp.com/"
+    "BACK_END_URL":"http://localhost:8080"
 }
