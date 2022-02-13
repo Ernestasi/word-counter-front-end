@@ -11,7 +11,8 @@ import {
 } from "@material-ui/core";
 import { Grid, Paper } from "@mui/material";
 import { makeStyles } from "@material-ui/core/styles";
-import UploadFileService from "../service/upload-file-service";
+import WordCounterService from "../service/word-counter-service";
+import { letters } from "../lists/letters";
 
 const BorderLinearProgress = withStyles((theme) => ({
   root: {
@@ -34,164 +35,7 @@ const useStyles = makeStyles({
   },
 });
 
-const letters = [
-  {
-    string: "a",
-    label: "a",
-    value: 97,
-    scaledValue: "a",
-  },
-  {
-    string: "b",
-    label: "b",
-    value: 98,
-    scaledValue: "b",
-  },
-  {
-    string: "c",
-    label: "c",
-    value: 99,
-    scaledValue: "c",
-  },
-  {
-    string: "d",
-    label: "d",
-    value: 100,
-    scaledValue: "d",
-  },
-  {
-    string: "e",
-    label: "e",
-    value: 101,
-    scaledValue: "e",
-  },
-  {
-    string: "f",
-    label: "f",
-    value: 102,
-    scaledValue: "f",
-  },
-  {
-    string: "g",
-    label: "g",
-    value: 103,
-    scaledValue: "g",
-  },
-  {
-    string: "h",
-    label: "h",
-    value: 104,
-    scaledValue: "h",
-  },
-  {
-    string: "i",
-    label: "i",
-    value: 105,
-    scaledValue: "i",
-  },
-  {
-    string: "j",
-    label: "j",
-    value: 106,
-    scaledValue: "j",
-  },
-  {
-    string: "k",
-    label: "k",
-    value: 107,
-    scaledValue: "k",
-  },
-  {
-    string: "l",
-    label: "l",
-    value: 108,
-    scaledValue: "l",
-  },
-  {
-    string: "m",
-    label: "m",
-    value: 109,
-    scaledValue: "m",
-  },
-  {
-    string: "n",
-    label: "n",
-    value: 110,
-    scaledValue: "n",
-  },
-  {
-    string: "o",
-    label: "o",
-    value: 111,
-    scaledValue: "o",
-  },
-  {
-    string: "p",
-    label: "p",
-    value: 112,
-    scaledValue: "p",
-  },
-  {
-    string: "q",
-    label: "q",
-    value: 113,
-    scaledValue: "q",
-  },
-  {
-    string: "r",
-    label: "r",
-    value: 114,
-    scaledValue: "r",
-  },
-  {
-    string: "s",
-    label: "s",
-    value: 115,
-    scaledValue: "s",
-  },
-  {
-    string: "t",
-    label: "t",
-    value: 116,
-    scaledValue: "t",
-  },
-  {
-    string: "u",
-    label: "u",
-    value: 117,
-    scaledValue: "u",
-  },
-  {
-    string: "v",
-    label: "v",
-    value: 118,
-    scaledValue: "v",
-  },
-  {
-    string: "w",
-    label: "w",
-    value: 119,
-    scaledValue: "w",
-  },
-  {
-    string: "x",
-    label: "x",
-    value: 120,
-    scaledValue: "x",
-  },
-  {
-    string: "y",
-    label: "y",
-    value: 121,
-    scaledValue: "y",
-  },
-  {
-    string: "z",
-    label: "z",
-    value: 122,
-    scaledValue: "z",
-  },
-];
+const letterMarks = letters;
 
 export default class UploadFiles extends Component {
   constructor(props) {
@@ -207,6 +51,7 @@ export default class UploadFiles extends Component {
       fileInfos: [],
       results: [],
       ranges: [],
+      limit: undefined,
     };
   }
 
@@ -219,12 +64,9 @@ export default class UploadFiles extends Component {
       selectedFiles: event.target.files,
     });
   }
-  checkMap(results) {
-    console.log(results);
-  }
 
   clearData() {
-    UploadFileService.clearData().then((response) => {
+    WordCounterService.clearData().then((response) => {
       if (response.status === 200) {
         this.getData();
       }
@@ -232,7 +74,7 @@ export default class UploadFiles extends Component {
   }
 
   changeLimit = (event, newValue) => {
-    UploadFileService.changeLimit(newValue).then((response) => {
+    WordCounterService.changeLimit(newValue).then((response) => {
       if (response.status === 200) {
         this.getData();
       }
@@ -240,7 +82,7 @@ export default class UploadFiles extends Component {
   };
 
   changeResultSetRange = (rangeIndex, val) => {
-    UploadFileService.changeRange(rangeIndex, val[0], val[1]).then(
+    WordCounterService.changeRange(rangeIndex, val[0], val[1]).then(
       (response) => {
         if (response.status === 200) {
           this.getData();
@@ -253,18 +95,27 @@ export default class UploadFiles extends Component {
     this.getFileNames();
     this.getMaps();
     this.getRanges();
+    this.getLimit();
   }
 
   getRanges() {
-    UploadFileService.getRanges().then((response) => {
-      console.log(response.data);
+    WordCounterService.getRanges().then((response) => {
       this.setState({
         ranges: response.data,
       });
     });
   }
+
+  getLimit() {
+    WordCounterService.getLimit().then((response) => {
+      this.setState({
+        limit: response.data
+      });
+    });
+  }
+
   getFileNames() {
-    UploadFileService.getFileNames().then((response) => {
+    WordCounterService.getFileNames().then((response) => {
       this.setState({
         fileInfos: response.data,
       });
@@ -272,11 +123,20 @@ export default class UploadFiles extends Component {
   }
 
   getMaps() {
-    UploadFileService.getMaps().then((response) => {
+    WordCounterService.getMaps().then((response) => {
       this.setState({
         results: response.data,
       });
     });
+  }
+
+  parseRange(rangeArray) {
+    return (
+      "From " +
+      String.fromCharCode(rangeArray[0]) +
+      " To " +
+      String.fromCharCode(rangeArray[1])
+    );
   }
 
   upload() {
@@ -287,7 +147,7 @@ export default class UploadFiles extends Component {
       currentFile: currentFile,
     });
 
-    UploadFileService.upload(currentFile, (event) => {
+    WordCounterService.upload(currentFile, (event) => {
       this.setState({
         progress: Math.round((100 * event.loaded) / event.total),
       });
@@ -344,6 +204,7 @@ export default class UploadFiles extends Component {
       results,
       isError,
       ranges,
+      limit,
     } = this.state;
 
     return (
@@ -412,15 +273,23 @@ export default class UploadFiles extends Component {
             <div>
               <Typography gutterBottom>Amount of top values</Typography>
 
-              <Slider
-                valueLabelDisplay="auto"
-                onChangeCommitted={this.changeLimit}
-                aria-label="custom thumb label"
-                defaultValue={20}
-              />
+              {(() => {
+                if (limit) {
+                  return (
+                    <Slider
+                      valueLabelDisplay="auto"
+                      onChangeCommitted={this.changeLimit}
+                      aria-label="custom thumb label"
+                      value={limit}
+                      min={1}
+                      max={500}
+                    />
+                  );
+                }
+              })()}
             </div>
             <div>
-              <Typography gutterBottom>result set 1 from letter:</Typography>
+              <Typography gutterBottom>Ranges for result sets:</Typography>
 
               {(() => {
                 if (ranges.length !== 0) {
@@ -428,9 +297,8 @@ export default class UploadFiles extends Component {
                     <div>
                       <Slider
                         aria-label="Always visible"
-                        marks={letters}
+                        marks={letterMarks}
                         value={ranges[0]}
-
                         onChangeCommitted={(event, val) =>
                           this.changeResultSetRange(0, val)
                         }
@@ -441,9 +309,8 @@ export default class UploadFiles extends Component {
                       />
                       <Slider
                         aria-label="Always visible"
-                        marks={letters}
+                        marks={letterMarks}
                         value={ranges[1]}
-
                         onChangeCommitted={(event, val) =>
                           this.changeResultSetRange(1, val)
                         }
@@ -454,9 +321,8 @@ export default class UploadFiles extends Component {
                       />
                       <Slider
                         aria-label="Always visible"
-                        marks={letters}
+                        marks={letterMarks}
                         value={ranges[2]}
-
                         onChangeCommitted={(event, val) =>
                           this.changeResultSetRange(2, val)
                         }
@@ -467,9 +333,8 @@ export default class UploadFiles extends Component {
                       />
                       <Slider
                         aria-label="Always visible"
-                        marks={letters}
+                        marks={letterMarks}
                         value={ranges[3]}
-
                         onChangeCommitted={(event, val) =>
                           this.changeResultSetRange(3, val)
                         }
@@ -515,7 +380,13 @@ export default class UploadFiles extends Component {
               return (
                 <div>
                   <Typography variant="h6" className="list-header">
-                    {mapIndex}
+                    {(() => {
+                      if (ranges.length !== 0) {
+                        return this.parseRange(ranges[mapIndex]);
+                      }
+                    })()}
+
+                    {/* From {String.fromCharCode(ranges[mapIndex][0])} to {String.fromCharCode(ranges[mapIndex][1])} */}
                   </Typography>
                   <Paper elevation={5} className={useStyles.paper}>
                     <ListItem divider key={mapIndex}>

@@ -1,6 +1,6 @@
 import Axios from "../config/axios-config";
 
-class UploadFilesService {
+class WordCounterService {
   upload(file, onUploadProgress) {
     let formData = new FormData();
 
@@ -13,12 +13,19 @@ class UploadFilesService {
       onUploadProgress,
     });
   }
+
   getFileNames() {
     return Axios.get("/file-names");
   }
+
   getRanges() {
     return Axios.get("/ranges");
   }
+
+  getLimit() {
+    return Axios.get("/limit-value");
+  }
+
   getMaps() {
     return Axios.get("/maps");
   }
@@ -26,13 +33,6 @@ class UploadFilesService {
   clearData() {
     return Axios.put("/clear-data");
   }
-
-  // changeLimit(value) {
-  //   let params = {
-  //     limit: value,
-  //   };
-  //   return Axios.put("/change-limit", params);
-  // }
 
   changeLimit(value) {
     return Axios.get("/change-limit", {
@@ -53,4 +53,4 @@ class UploadFilesService {
   }
 }
 
-export default new UploadFilesService();
+export default new WordCounterService();
