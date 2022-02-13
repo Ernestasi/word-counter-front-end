@@ -423,7 +423,7 @@ export default class UploadFiles extends Component {
               <Typography gutterBottom>result set 1 from letter:</Typography>
 
               {(() => {
-                if (ranges.length != 0) {
+                if (ranges.length !== 0) {
                   return (
                     <div>
                       <Slider
